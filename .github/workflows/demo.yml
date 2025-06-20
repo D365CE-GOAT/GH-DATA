@@ -4,8 +4,11 @@ on:
     branches:
       - master
   workflow_dispatch:
+env:  # to provide environment variable on workflow level , for server names or organisation for example.
+
 jobs:
   test:
+    env: # # to provide environment variable on test job level
     runs-on: ubuntu-latest
     steps:
       - name: Get code
