@@ -9,8 +9,13 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
+      - name: Cache dependencies # to cache the dependencies and use it in another job
+        uses: actions/cache@v3
+        with: 
+          path: ~/.npm  # github  already creates a cache, we telling github to reuse it , it is exists
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}} # use to retrieve the cache and explains if the key should be changed when the dependencies change that is what the hash is for
       - name: Install dependencies
-        run: npm ci
+        run: npm ci # if the dependencies don't exist or have changed, they will be reinstalled
       - name: Lint code
         run: npm run lint
       - name: Test code
@@ -23,6 +28,11 @@ jobs:
     steps:
       - name: Get code
         uses: actions/checkout@v3
+      - name: Cache dependencies # to use depedencies that were used or created in test
+        uses: actions/cache@v3
+        with: 
+          path: ~/.npm  
+          key: deps-node-modules-${{hashFiles('**/package-lock.json')}}
       - name: Install dependencies
         run: npm ci
       - name: Build website
